@@ -4,40 +4,27 @@ on:
     branches: [ "development" ]
   pull_request:
     branches: [ "**" ]
+  workflow_dispatch:
 
 jobs:
-  Parse_nix:
-    runs-on: [ubuntu-latest]
+  Build:
+    runs-on: [ubuntu-24.04-arm]
     steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
-      - name: "Parse .nix files"
-        run: .ci/parse-all.sh
-  Quick_Eval:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
+      - uses: actions/checkout@v6
+      - name: Reclaim space
+        uses: wimpysworld/nothing-but-nix@v6
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: "Quick Evaluation"
-        run: .ci/quick-eval.sh
-  # Temporarily disabled.
-  #Instantiation:
-  #  runs-on: [ubuntu-latest]
-  #  steps:
-  #    - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-  #    - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
-  #      with:
-  #        nix_path: nixpkgs=channel:nixos-unstable
-  #    - name: "Instantiation"
-  #      run: bin/hydra-eval
-  Kernel_configuration_up-to-date:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
+          hatchet-protocol: rampage
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - uses: cachix/cachix-action@v15
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: "Kernel configuration up-to-date"
-        run: bin/kernel-normalize-all --only-check
+          name: slaier
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          extraPullNames: nix-community
+
+      - name: Build
+        run: |
+          env NIXPKGS_ALLOW_UNFREE=1 nix-build examples/simple --argstr device xiaomi-raphael -A outputs.android-fastboot-images

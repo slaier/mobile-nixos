@@ -164,10 +164,13 @@ in
         IP_NF_IPTABLES              = module;
         IP6_NF_IPTABLES             = module;
         NETFILTER_XTABLES           = module;
+        IP_NF_IPTABLES_LEGACY       = module; # required for IP_NF_RAW
         IP_NF_RAW                   = module;
+        IP6_NF_IPTABLES_LEGACY      = module; # required for IP6_NF_RAW
         IP6_NF_RAW                  = module;
         NETFILTER_XT_TARGET_CT      = module; # required for NF_CONNTRACK_ZONES
 
+        IPV6                        = module; # required for BRIDGE
         BRIDGE                      = module; # required for BRIDGE_NETFILTER
         BRIDGE_NETFILTER            = module; # required for NETFILTER_XT_MATCH_PHYSDEV
         XFRM_USER                   = module; # required for NETFILTER_XT_MATCH_POLICY

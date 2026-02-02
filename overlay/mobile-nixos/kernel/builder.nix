@@ -354,14 +354,14 @@ stdenv.mkDerivation (inputArgs // {
       echo
       echo ":: Updating config to conform to structured config"
       echo
-      make $makeFlags "''${makeFlagsArray[@]}" oldconfig
+      make $makeFlags "''${makeFlagsArray[@]}" olddefconfig
       rm $buildRoot/.config.old
       echo
     fi
 
     # reads the existing .config file and prompts the user for options in
     # the current kernel source that are not found in the file.
-    make $makeFlags "''${makeFlagsArray[@]}" oldconfig
+    make $makeFlags "''${makeFlagsArray[@]}" olddefconfig
     if [ -n "$forceNormalizedConfig" ]; then
       if [ -e $buildRoot/.config.old ]; then
         # First we strip options that save the exact compiler version,

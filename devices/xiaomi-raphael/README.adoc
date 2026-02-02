@@ -1,0 +1,27 @@
+= Xiaomi raphael
+include::_support/common.inc[]
+
+== Device-specific notes
+
+=== First time setup notes
+
+==== Update firmware
+
+==== Prepare for mainline
+
+[NOTE]
+====
+This assumes the phone will only run SM8150 mainline images.
+====
+
+You will need to erase the `dtbo` partitions.
+
+```
+ $ fastboot erase dtbo
+```
+
+
+==== Dual booting
+
+This is not supported. Refer to other non-Android Linux instructions and
+adapt as needed. Here be snapdragons.
